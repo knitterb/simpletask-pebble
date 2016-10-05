@@ -1,12 +1,16 @@
 {
     "author": "Brandon Knitter",
-    "dependencies": {},
+    "dependencies": {
+        "pebble-app-ready-service": "^0.1.0"
+    },
     "keywords": [],
     "name": "simpletask",
     "pebble": {
         "displayName": "Simpletask Pebble",
         "enableMultiJS": true,
-        "messageKeys": [],
+        "messageKeys": [
+            "AppReady"
+        ],
         "projectType": "native",
         "resources": {
             "media": [
@@ -35,8 +39,7 @@
         "sdkVersion": "3",
         "targetPlatforms": [
             "aplite",
-            "basalt",
-            "diorite"
+            "basalt"
         ],
         "uuid": "a6c5b8ef-0b0e-4db2-8ebe-32a363699065",
         "watchapp": {
