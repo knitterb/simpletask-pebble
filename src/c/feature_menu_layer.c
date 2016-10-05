@@ -2,7 +2,7 @@
 
 #include "src/c/module/data.h"
 
-#define NUM_MENU_SECTIONS 2
+#define NUM_MENU_SECTIONS 1
 #define NUM_MENU_ICONS 3
 #define NUM_SECOND_MENU_ITEMS 1
 
@@ -37,7 +37,7 @@ static void menu_draw_header_callback(GContext* ctx, const Layer *cell_layer, ui
   switch (section_index) {
     case 0:
         // Draw title text in the section header
-        menu_cell_basic_header_draw(ctx, cell_layer, "Some example items");
+        menu_cell_basic_header_draw(ctx, cell_layer, "Simpletask");
       break;
     case 1:
         // Draw title text in the section header
@@ -51,30 +51,12 @@ static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuI
   // Determine which section we're going to draw in
   switch (cell_index->section) {
     case 0:
-      // Use the row to specify which item we'll draw
-      switch (cell_index->row) {
-        case 0:
-          // This is a basic menu item with a title and subtitle
-          APP_LOG(APP_LOG_LEVEL_DEBUG, "Getting task for row %d", cell_index->row);
-          s_task=data_get_task(cell_index->row);
-          APP_LOG(APP_LOG_LEVEL_DEBUG, "Task id %d", s_task.id);
-          APP_LOG(APP_LOG_LEVEL_DEBUG, "Task name %s", s_task.name);
-          menu_cell_basic_draw(ctx, cell_layer, s_task.name, "With a subtitle", NULL);
-          break;
-        case 1:
-          // This is a basic menu icon with a cycling icon
-          menu_cell_basic_draw(ctx, cell_layer, "Icon Item", "Select to cycle", s_menu_icons[s_current_icon]);
-          break;
-        case 2: 
-          {
-            // Here we use the graphics context to draw something different
-            // In this case, we show a strip of a watchface's background
-            GSize size = layer_get_frame(cell_layer).size;
-            const uint8_t x_offset = (size.w - gbitmap_get_bounds(s_background_bitmap).size.w) / 2;
-            graphics_draw_bitmap_in_rect(ctx, s_background_bitmap, GRect(x_offset, 0, size.w, size.h));
-          }
-          break;
-      }
+      // This is a basic menu item with a title and subtitle
+      APP_LOG(APP_LOG_LEVEL_DEBUG, "Getting task for row %d", cell_index->row);
+      s_task=data_get_task(cell_index->row);
+      APP_LOG(APP_LOG_LEVEL_DEBUG, "Task id %d", s_task.id);
+      APP_LOG(APP_LOG_LEVEL_DEBUG, "Task name %s", s_task.name);
+      menu_cell_basic_draw(ctx, cell_layer, s_task.name, NULL /* TODO(bk) add a subtitle */, NULL);
       break;
     case 1:
       switch (cell_index->row) {
