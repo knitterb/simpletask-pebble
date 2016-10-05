@@ -1,0 +1,47 @@
+{
+    "author": "Brandon Knitter",
+    "dependencies": {},
+    "keywords": [],
+    "name": "simpletask",
+    "pebble": {
+        "displayName": "Simpletask Pebble",
+        "enableMultiJS": true,
+        "messageKeys": [],
+        "projectType": "native",
+        "resources": {
+            "media": [
+                {
+                    "file": "images/menu_icon_sector_watch.png",
+                    "name": "IMAGE_MENU_ICON_SECTOR_WATCH",
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/menu_icon_binary_watch.png",
+                    "name": "IMAGE_MENU_ICON_BINARY_WATCH",
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/menu_icon_big_watch.png",
+                    "name": "IMAGE_MENU_ICON_BIG_WATCH",
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/brains_watch_background.png",
+                    "name": "IMAGE_BACKGROUND_BRAINS",
+                    "type": "bitmap"
+                }
+            ]
+        },
+        "sdkVersion": "3",
+        "targetPlatforms": [
+            "aplite",
+            "basalt",
+            "diorite"
+        ],
+        "uuid": "a6c5b8ef-0b0e-4db2-8ebe-32a363699065",
+        "watchapp": {
+            "watchface": false
+        }
+    },
+    "version": "0.1.0"
+}
