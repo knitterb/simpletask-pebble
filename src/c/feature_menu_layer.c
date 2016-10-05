@@ -150,7 +150,7 @@ static void main_window_unload(Window *window) {
 }
 
 static void init() {
-  data_init(5);
+  data_init();
   s_main_window = window_create();
   window_set_window_handlers(s_main_window, (WindowHandlers) {
     .load = main_window_load,

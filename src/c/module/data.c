@@ -3,7 +3,17 @@
 
 static task s_tasks[NUM_MAX_TASK_ITEMS];
 
-void data_init(int array_length) {
+// Largest expected inbox and outbox message sizes
+const uint32_t outbox_size = 64;
+const uint32_t inbox_size = 256;
+
+const uint32_t MESSAGE_KEY_RequestData = 0;
+
+
+void data_init() {
+  // get tasks from phone
+  data_request_tasks();
+    
   // make a fake set of tasks for now
   s_tasks[0].id=0;
   strncpy(s_tasks[0].name, "first task this is really long", NUM_TASK_DESCRIPTION_LENGTH-1);
@@ -38,6 +48,35 @@ void data_init(int array_length) {
 }
 
 void data_deinit() {
+}
+
+void data_request_tasks() {
+  
+  // Open AppMessage
+  app_message_open(inbox_size, outbox_size);
+
+  // Declare the dictionary's iterator
+  DictionaryIterator *out_iter;
+  
+  // Prepare the outbox buffer for this message
+  AppMessageResult result = app_message_outbox_begin(&out_iter);
+  if(result == APP_MSG_OK) {
+    // Add an item to ask for weather data
+    int value = 0;
+    dict_write_int(out_iter, MESSAGE_KEY_RequestData, &value, sizeof(int), true);
+  
+    // Send this message
+    result = app_message_outbox_send();
+    if(result != APP_MSG_OK) {
+      APP_LOG(APP_LOG_LEVEL_ERROR, "Error sending the outbox: %d", (int)result);
+    } else {
+      APP_LOG(APP_LOG_LEVEL_DEBUG, "Sent request to phone success: %d", (int)result);
+    }
+  } else {
+    // The outbox cannot be used right now
+    APP_LOG(APP_LOG_LEVEL_ERROR, "Error preparing the outbox: %d", (int)result);
+  }
+  
 }
 
 int data_get_task_count() {

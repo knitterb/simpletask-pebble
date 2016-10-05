@@ -11,7 +11,9 @@ typedef struct task
   char name[NUM_TASK_DESCRIPTION_LENGTH];
 } task;
 
-void data_init(int array_length);
+
+void data_init();
+void data_request_tasks();
 
 void data_deinit();
 
