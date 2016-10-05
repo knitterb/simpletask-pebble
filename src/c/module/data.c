@@ -2,16 +2,20 @@
 #include "data.h"
 
 static int* s_array;
-static char s_tasks[3][15];
+static task s_tasks[NUM_MAX_TASK_ITEMS];
 
 void data_init(int array_length) {
   if(!s_array) {
     s_array = (int*)malloc(array_length * sizeof(int));
   }
   
-  strcpy(s_tasks[0], "first task");
-  strcpy(s_tasks[1], "second task");
-  strcpy(s_tasks[2], "third task");
+  // make a fake set of tasks for now
+  s_tasks[0].id=0;
+  strncpy(s_tasks[0].name, "first task this is really long", NUM_TASK_DESCRIPTION_LENGTH-1);
+  s_tasks[1].id=1;
+  strncpy(s_tasks[1].name, "second task", NUM_TASK_DESCRIPTION_LENGTH-1);
+  s_tasks[2].id=2;
+  strncpy(s_tasks[2].name, "third task", NUM_TASK_DESCRIPTION_LENGTH-1);
   
 }
 
@@ -30,6 +34,10 @@ int data_get_array_value(int index) {
   return s_array[index];
 }
 
-char* data_get_task(int index) {
+int data_get_task_count() {
+  return NUM_MAX_TASK_ITEMS;
+}
+
+task data_get_task(int index) {
   return s_tasks[index];
 }

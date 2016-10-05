@@ -4,7 +4,6 @@
 
 #define NUM_MENU_SECTIONS 2
 #define NUM_MENU_ICONS 3
-#define NUM_FIRST_MENU_ITEMS 3
 #define NUM_SECOND_MENU_ITEMS 1
 
 static Window *s_main_window;
@@ -21,7 +20,7 @@ static uint16_t menu_get_num_sections_callback(MenuLayer *menu_layer, void *data
 static uint16_t menu_get_num_rows_callback(MenuLayer *menu_layer, uint16_t section_index, void *data) {
   switch (section_index) {
     case 0:
-      return NUM_FIRST_MENU_ITEMS;
+      return data_get_task_count();
     case 1:
       return NUM_SECOND_MENU_ITEMS;
     default:
@@ -48,6 +47,7 @@ static void menu_draw_header_callback(GContext* ctx, const Layer *cell_layer, ui
 }
 
 static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuIndex *cell_index, void *data) {
+  task s_task;
   // Determine which section we're going to draw in
   switch (cell_index->section) {
     case 0:
@@ -55,7 +55,11 @@ static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuI
       switch (cell_index->row) {
         case 0:
           // This is a basic menu item with a title and subtitle
-          menu_cell_basic_draw(ctx, cell_layer, data_get_task(cell_index->row), "With a subtitle", NULL);
+          APP_LOG(APP_LOG_LEVEL_DEBUG, "Getting task for row %d", cell_index->row);
+          s_task=data_get_task(cell_index->row);
+          APP_LOG(APP_LOG_LEVEL_DEBUG, "Task id %d", s_task.id);
+          APP_LOG(APP_LOG_LEVEL_DEBUG, "Task name %s", s_task.name);
+          menu_cell_basic_draw(ctx, cell_layer, s_task.name, "With a subtitle", NULL);
           break;
         case 1:
           // This is a basic menu icon with a cycling icon
