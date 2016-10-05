@@ -17,6 +17,10 @@ static uint16_t menu_get_num_sections_callback(MenuLayer *menu_layer, void *data
   return NUM_MENU_SECTIONS;
 }
 
+static void menu_reload() {
+  menu_layer_reload_data(s_menu_layer);
+}
+
 static uint16_t menu_get_num_rows_callback(MenuLayer *menu_layer, uint16_t section_index, void *data) {
   switch (section_index) {
     case 0:
@@ -135,6 +139,8 @@ static void main_window_load(Window *window) {
   menu_layer_set_click_config_onto_window(s_menu_layer, window);
 
   layer_add_child(window_layer, menu_layer_get_layer(s_menu_layer));
+  
+  data_init(s_menu_layer);
 }
 
 static void main_window_unload(Window *window) {
@@ -150,7 +156,6 @@ static void main_window_unload(Window *window) {
 }
 
 static void init() {
-  data_init();
   s_main_window = window_create();
   window_set_window_handlers(s_main_window, (WindowHandlers) {
     .load = main_window_load,
