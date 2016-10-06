@@ -21,47 +21,10 @@ void data_init(MenuLayer *m) {
   s_menu_layer=m;
   nextval=0;
   
-  // Need to wait for JS to be ready, probably need a better facility than this
-  // https://developer.pebble.com/docs/pebblekit-js/Pebble/#addEventListener (although this is JS not C)
-  //psleep(1000);
-
   // get tasks from phone
   data_request_bind();
 
 
-  //data_request_tasks();
-    
-  // make a fake set of tasks for now
-  s_tasks[0].id=0;
-  strncpy(s_tasks[0].name, "zeroth task this is really long", NUM_TASK_DESCRIPTION_LENGTH-1);
-  s_tasks[1].id=1;
-  strncpy(s_tasks[1].name, "first task", NUM_TASK_DESCRIPTION_LENGTH-1);
-  s_tasks[2].id=2;
-  strncpy(s_tasks[2].name, "second task", NUM_TASK_DESCRIPTION_LENGTH-1);
-  s_tasks[3].id=3;
-  strncpy(s_tasks[3].name, "third task", NUM_TASK_DESCRIPTION_LENGTH-1);
-  s_tasks[4].id=4;
-  strncpy(s_tasks[4].name, "fourth task", NUM_TASK_DESCRIPTION_LENGTH-1);
-  s_tasks[5].id=5;
-  strncpy(s_tasks[5].name, "fifth task", NUM_TASK_DESCRIPTION_LENGTH-1);
-  s_tasks[6].id=6;
-  strncpy(s_tasks[6].name, "sixth task", NUM_TASK_DESCRIPTION_LENGTH-1);
-  s_tasks[7].id=7;
-  strncpy(s_tasks[7].name, "seventh task", NUM_TASK_DESCRIPTION_LENGTH-1);
-  s_tasks[8].id=8;
-  strncpy(s_tasks[8].name, "eighth task", NUM_TASK_DESCRIPTION_LENGTH-1);
-  s_tasks[9].id=9;
-  strncpy(s_tasks[9].name, "nineth task", NUM_TASK_DESCRIPTION_LENGTH-1);
-  s_tasks[10].id=10;
-  strncpy(s_tasks[10].name, "tenth task", NUM_TASK_DESCRIPTION_LENGTH-1);
-  s_tasks[11].id=11;
-  strncpy(s_tasks[11].name, "eleventh task", NUM_TASK_DESCRIPTION_LENGTH-1);
-  s_tasks[12].id=12;
-  strncpy(s_tasks[12].name, "tweleth task", NUM_TASK_DESCRIPTION_LENGTH-1);
-  s_tasks[13].id=13;
-  strncpy(s_tasks[13].name, "thirteenth task", NUM_TASK_DESCRIPTION_LENGTH-1);
-  s_tasks[14].id=14;
-  strncpy(s_tasks[14].name, "fourteenth task", NUM_TASK_DESCRIPTION_LENGTH-1);
 }
 
 void data_deinit() {
