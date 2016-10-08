@@ -32,13 +32,23 @@ All messages sent from the Pebble watch to the phone, and vice versa, are passed
 |Message Type       |Message Type ID (value)|
 |-------------------|-----------------------|
 |Request Tasks (all)|0                      |
+|Complete Task      |1                      |
 
 ###Request Tasks
 This requests that the phone send all tasks.  There are no values that accompany this message.
 
-|ID |Description      |
-|---|-----------------|
-|0  |Message Type ID  |
+|ID |Description        |
+|---|-------------------|
+|0  |Message Type ID = 0|
+
+###Complete Task
+This will mark the task as completed or not.
+
+|ID |Description        |
+|---|-------------------|
+|0  |Message Type ID = 1|
+|1  |Line number        |
+|2  |Complete 1=yes 0=no|
 
 ##Phone to Watch
 
@@ -49,8 +59,8 @@ This requests that the phone send all tasks.  There are no values that accompany
 ###Task
 This represents a single task that is sent.  The following is the structure of the message.
 
-|ID |Description      |
-|---|-----------------|
-|0  |Message Type ID  |
-|1  |Task Line Number |
+|ID |Description        |
+|---|-------------------|
+|0  |Message Type ID = 0|
+|1  |Task Line Number   |
 
