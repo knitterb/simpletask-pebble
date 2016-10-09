@@ -63,4 +63,5 @@ This represents a single task that is sent.  The following is the structure of t
 |---|-------------------|
 |0  |Message Type ID = 0|
 |1  |Task Line Number   |
+|2  |Task Name <=25 char|
 
