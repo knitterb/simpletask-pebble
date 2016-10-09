@@ -1,25 +1,23 @@
 #include <pebble.h>
 #include "data.h"
 
+#define MessageTypeRequestAllTasks 0
+
+#define MessageTypeResponseTask 0
+#define MessageTypeResponseTaskLine 1
+#define MessageTypeResponseTaskName 2
+
 static task s_tasks[NUM_MAX_TASK_ITEMS];
 
 // Largest expected inbox and outbox message sizes
 const uint32_t outbox_size = 64 ;
 const uint32_t inbox_size = 64 ;
 
-const uint32_t MESSAGE_KEY_RequestData = 0;
-const uint32_t MESSAGE_KEY_ReceiveLine = 0;
-const uint32_t MESSAGE_KEY_ReceiveName = 1;
 
-
-static int state_recv=0;
-static int state_sent=0;
-static int nextval=-1;
 static MenuLayer *s_menu_layer;
 
 void data_init(MenuLayer *m) {
   s_menu_layer=m;
-  nextval=0;
   
   // get tasks from phone
   data_request_bind();
@@ -40,16 +38,8 @@ task data_get_task(int index) {
 }
 
 void data_request_tasks() {
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "Requesting line: %d", nextval);
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "Requesting tasks");
   
-  if (!(state_recv==0 && state_sent==0)) {
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "Still processing another line");
-    return;
-  }
-            
-  state_recv=1;
-  state_sent=1;  
-
   // Declare the dictionary's iterator
   DictionaryIterator *out_iter;
   
@@ -57,7 +47,8 @@ void data_request_tasks() {
   AppMessageResult result = app_message_outbox_begin(&out_iter);
   if(result == APP_MSG_OK) {
     // Add an item to ask for weather data
-    dict_write_int(out_iter, MESSAGE_KEY_RequestData, &nextval, sizeof(int), true);
+    int msgType=MessageTypeRequestAllTasks;
+    dict_write_int(out_iter, 0,  &msgType, sizeof(int), true);
   
     // Send this message
     result = app_message_outbox_send();
@@ -96,9 +87,8 @@ static void inbox_received_callback(DictionaryIterator *iter, void *context) {
   // A new message has been successfully received
   APP_LOG(APP_LOG_LEVEL_INFO, "Message received");
 
-  state_recv=0;
-
   // Is this an appReady alert?
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "Looking for MESSAGE_KEY_AppReady=%d", (int)MESSAGE_KEY_AppReady);
   Tuple *app_ready_tuple = dict_find(iter, MESSAGE_KEY_AppReady);
   if(app_ready_tuple) {
       APP_LOG(APP_LOG_LEVEL_INFO, "App is ready");
@@ -106,30 +96,38 @@ static void inbox_received_callback(DictionaryIterator *iter, void *context) {
       return;
   }
 
-  
-  int32_t line=-1;
-  Tuple *line_tuple = dict_find(iter, MESSAGE_KEY_ReceiveLine);
-  if(line_tuple) {
-    // This value was stored as JS Number, which is stored here as int32_t
-    line = line_tuple->value->int32;
+
+  Tuple *messageResponseTuple = dict_find(iter, 0);
+  if (!messageResponseTuple) {
+    APP_LOG(APP_LOG_LEVEL_ERROR, "Could not find a response control at position 0");
+    return;
   }
-  
-  char name[NUM_TASK_DESCRIPTION_LENGTH];
-  Tuple *name_tuple = dict_find(iter, MESSAGE_KEY_ReceiveName);
-  if(name_tuple) {
-    // This value was stored as JS String, which is stored here as char*
-    char *t_name = name_tuple->value->cstring;
-    strncpy(name, t_name, NUM_TASK_DESCRIPTION_LENGTH-1);
+
+  int messageResponseType=messageResponseTuple->value->int32;
+  switch (messageResponseType) {
+    case MessageTypeResponseTask: // task
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "Found a task repsonse (MessageTypeResponseTask)");
+        Tuple *task_line=dict_find(iter, MessageTypeResponseTaskLine);
+        if (!task_line) {
+          APP_LOG(APP_LOG_LEVEL_ERROR,"Cannot find task line (MessageTypeResponseTaskLine)");
+          return;
+        }
+        Tuple *task_name=dict_find(iter, MessageTypeResponseTaskName);
+        if (!task_name) {
+          APP_LOG(APP_LOG_LEVEL_ERROR,"Cannot find task name (MessageTypeResponseTaskName)");
+          return;
+        }
+
+        int32_t line=task_line->value->int32;
+        s_tasks[line].id=line;
+        strncpy(s_tasks[line].name, task_name->value->cstring, NUM_TASK_DESCRIPTION_LENGTH-1);
+        
+        break;
+    default: // unknown
+        APP_LOG(APP_LOG_LEVEL_ERROR, "Unknown response control type: %d", (int)messageResponseTuple->value->int32);
   }
-  
-  if (line>=0 && line<NUM_MAX_TASK_ITEMS) {
-    APP_LOG(APP_LOG_LEVEL_INFO, "Message received line: %d", (int)line);
-    s_tasks[line].id=line;
-    strncpy(s_tasks[line].name, name, NUM_TASK_DESCRIPTION_LENGTH-1);
-    nextval++;
-  }
+
   menu_layer_reload_data(s_menu_layer);
-  data_request_tasks();
 }
 
 static void inbox_dropped_callback(AppMessageResult reason, void *context) {
@@ -140,8 +138,6 @@ static void inbox_dropped_callback(AppMessageResult reason, void *context) {
 static void outbox_sent_callback(DictionaryIterator *iter, void *context) {
   // The message just sent has been successfully delivered
   APP_LOG(APP_LOG_LEVEL_INFO, "Message sent.");
-  state_sent=0;
-  data_request_tasks();
 }
 
 static void outbox_failed_callback(DictionaryIterator *iter,
