@@ -8,6 +8,7 @@
 typedef struct task
 {
   int id;
+  char hash[11];
   char name[NUM_TASK_DESCRIPTION_LENGTH];
 } task;
 

@@ -5,7 +5,8 @@
 
 #define MessageTypeResponseTask 0
 #define MessageTypeResponseTaskLine 1
-#define MessageTypeResponseTaskName 2
+#define MessageTypeResponseTaskHash 2
+#define MessageTypeResponseTaskName 3
 
 static task s_tasks[NUM_MAX_TASK_ITEMS];
 
@@ -112,6 +113,11 @@ static void inbox_received_callback(DictionaryIterator *iter, void *context) {
           APP_LOG(APP_LOG_LEVEL_ERROR,"Cannot find task line (MessageTypeResponseTaskLine)");
           return;
         }
+        Tuple *task_hash=dict_find(iter, MessageTypeResponseTaskHash);
+        if (!task_hash) {
+          APP_LOG(APP_LOG_LEVEL_ERROR,"Cannot find task hash (MessageTypeResponseTaskHash)");
+          return;
+        }
         Tuple *task_name=dict_find(iter, MessageTypeResponseTaskName);
         if (!task_name) {
           APP_LOG(APP_LOG_LEVEL_ERROR,"Cannot find task name (MessageTypeResponseTaskName)");
@@ -120,6 +126,7 @@ static void inbox_received_callback(DictionaryIterator *iter, void *context) {
 
         int32_t line=task_line->value->int32;
         s_tasks[line].id=line;
+        strcpy(s_tasks[line].hash, task_hash->value->cstring);
         strncpy(s_tasks[line].name, task_name->value->cstring, NUM_TASK_DESCRIPTION_LENGTH-1);
         
         break;
