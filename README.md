@@ -65,5 +65,8 @@ This represents a single task that is sent.  The following is the structure of t
 |---|-------------------|
 |0  |Message Type ID = 0|
 |1  |Task ID            |
-|2  |Task Name <=25 char|
+|2  |Task Hash (TBD)    |
+|3  |Task Name <=25 char|
+*Task Hash algorithm has not been determined*
+
 
