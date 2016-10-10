@@ -47,8 +47,10 @@ This will mark the task as completed or not.
 |ID |Description        |
 |---|-------------------|
 |0  |Message Type ID = 1|
-|1  |Line number        |
-|2  |Complete 1=yes 0=no|
+|1  |Task ID            |
+|2  |Tash Hash (TBD)    |
+|3  |Complete 1=yes 0=no|
+*Task Hash algorithm has not been determined*
 
 ##Phone to Watch
 
@@ -62,6 +64,9 @@ This represents a single task that is sent.  The following is the structure of t
 |ID |Description        |
 |---|-------------------|
 |0  |Message Type ID = 0|
-|1  |Task Line Number   |
-|2  |Task Name <=25 char|
+|1  |Task ID            |
+|2  |Task Hash (TBD)    |
+|3  |Task Name <=25 char|
+*Task Hash algorithm has not been determined*
+
 
