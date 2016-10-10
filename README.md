@@ -50,6 +50,7 @@ This will mark the task as completed or not.
 |1  |Task ID            |
 |2  |Tash Hash (TBD)    |
 |3  |Complete 1=yes 0=no|
+*Task Hash algorithm has not been determined*
 
 ##Phone to Watch
 
