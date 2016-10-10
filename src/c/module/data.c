@@ -96,13 +96,14 @@ static void inbox_received_callback(DictionaryIterator *iter, void *context) {
       data_request_tasks();
       return;
   }
-
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "Other type of message");
 
   Tuple *messageResponseTuple = dict_find(iter, 0);
   if (!messageResponseTuple) {
     APP_LOG(APP_LOG_LEVEL_ERROR, "Could not find a response control at position 0");
     return;
   }
+  
 
   int messageResponseType=messageResponseTuple->value->int32;
   switch (messageResponseType) {
@@ -125,9 +126,14 @@ static void inbox_received_callback(DictionaryIterator *iter, void *context) {
         }
 
         int32_t line=task_line->value->int32;
-        s_tasks[line].id=line;
-        strcpy(s_tasks[line].hash, task_hash->value->cstring);
-        strncpy(s_tasks[line].name, task_name->value->cstring, NUM_TASK_DESCRIPTION_LENGTH-1);
+
+        if (line >= NUM_MAX_TASK_ITEMS) {
+          APP_LOG(APP_LOG_LEVEL_WARNING, "Exceeded maximum tasks %d", (int)line);
+        } else {
+          s_tasks[line].id=line;
+          strcpy(s_tasks[line].hash, task_hash->value->cstring);
+          strncpy(s_tasks[line].name, task_name->value->cstring, NUM_TASK_DESCRIPTION_LENGTH-1);
+        }
         
         break;
     default: // unknown
