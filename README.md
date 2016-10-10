@@ -48,7 +48,8 @@ This will mark the task as completed or not.
 |---|-------------------|
 |0  |Message Type ID = 1|
 |1  |Task ID            |
-|2  |Complete 1=yes 0=no|
+|2  |Tash Hash (TBD)    |
+|3  |Complete 1=yes 0=no|
 
 ##Phone to Watch
 
